@@ -1,0 +1,11 @@
+.roles {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    align-items: center
+}
+
+
+.panel.off { opacity: .65; }
+.btn.ghost.danger { color: var(--crimson); border-color: var(--crimson); }
+.btn.ghost.danger:hover { background: var(--blush); }

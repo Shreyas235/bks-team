@@ -1,0 +1,12 @@
+/* Load order matters (later files win ties). Pages are lazy-loaded, so every stylesheet is loaded up front from here. */
+@import "./base.css";
+@import "./layout.css";
+@import "./components.css";
+@import "./login.css";
+@import "./daily-updates.css";
+@import "./calendar.css";
+@import "./pipeline.css";
+@import "./dashboard.css";
+@import "./payments.css";
+@import "./team.css";
+@import "./clients.css";

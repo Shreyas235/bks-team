@@ -1,0 +1,82 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function userPath() { return /databases/$(db)/documents/users/$(request.auth.uid); }
+    // Signed in, has a profile made by a head, and is not disabled.
+    function signedIn() {
+      return request.auth != null && exists(userPath()) && get(userPath()).data.get('active', true) != false;
+    }
+    function roles() {
+      let d = get(userPath()).data;
+      return 'roles' in d ? d.roles : [d.role];
+    }
+    function isHead() { return roles().hasAny(['head']); }
+    function canPipeline() { return roles().hasAny(['head', 'sales']); }
+
+    // Only heads manage people. A person may read their own profile (so a disabled
+    // account can be told why) and change only their own name.
+    match /users/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || signedIn());
+      allow create: if signedIn() && isHead();
+      allow update: if signedIn() && (isHead()
+        || (request.auth.uid == uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name'])));
+    }
+    // People write only their own daily updates.
+    match /updates/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.resource.data.uid == request.auth.uid;
+    }
+    // Only heads and sales change deals.
+    match /deals/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && canPipeline() && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if signedIn() && canPipeline();
+    }
+    // Payments: each person edits their own; heads can read everyone's.
+    match /payments/{id} {
+      allow read: if signedIn() && (resource.data.uid == request.auth.uid || isHead());
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+    match /leaves/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+    match /meetings/{id} {
+      allow read: if signedIn();
+      allow create, delete: if signedIn() && isHead();
+      allow update: if signedIn() && (isHead()
+        || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seenBy']));
+    }
+    // In-app notifications: anyone can send one, only the recipient can read or mark it read.
+    match /notifications/{id} {
+      allow read, delete: if signedIn() && resource.data.uid == request.auth.uid;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid', 'text', 'tab', 'read', 'createdAt'])
+        && request.resource.data.text is string && request.resource.data.text.size() <= 300;
+      allow update: if signedIn() && resource.data.uid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+    }
+    // Comments on updates and deals.
+    match /comments/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.parentType in ['update', 'deal']
+        && request.resource.data.text is string && request.resource.data.text.size() <= 1000;
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isHead());
+    }
+    // Reminders (domain renewals, payments...). Shown to the whole team; changed by the creator or a head.
+    match /reminders/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if signedIn() && (resource.data.uid == request.auth.uid || isHead()) && request.resource.data.uid == resource.data.uid;
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isHead());
+    }
+    // Team settings (monthly sales target).
+    match /settings/{id} {
+      allow read: if signedIn();
+      allow write: if signedIn() && isHead();
+    }
+  }
+}

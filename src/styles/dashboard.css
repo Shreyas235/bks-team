@@ -1,0 +1,128 @@
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.2rem
+}
+
+.stat {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--orange);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    animation: rise .45s var(--ease) both
+}
+
+.stat b {
+    display: block;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--crimson);
+    line-height: 1.25
+}
+
+.stat span {
+    display: block;
+    font-size: .86rem
+}
+
+.stat small {
+    display: block;
+    color: var(--muted);
+    font-size: .8rem
+}
+
+.cards2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem
+}
+
+.bars {
+    display: grid;
+    gap: .6rem
+}
+
+.bar {
+    display: grid;
+    grid-template-columns: minmax(90px, 38%) 1fr auto;
+    gap: .6rem;
+    align-items: center;
+    font-size: .85rem
+}
+
+.bl {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.bt {
+    background: var(--bg);
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden
+}
+
+.bt i {
+    display: block;
+    height: 100%;
+    border-radius: 99px;
+    background: var(--grad);
+    animation: grow .9s var(--ease)
+}
+
+.prog {
+    height: 6px;
+    background: var(--bg);
+    border-radius: 99px;
+    overflow: hidden
+}
+
+.prog i {
+    display: block;
+    height: 100%;
+    background: var(--grad);
+    border-radius: 99px
+}
+
+.tblwrap {
+    overflow-x: auto
+}
+
+.tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .92rem
+}
+
+.tbl th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 500;
+    padding: .4rem .5rem;
+    border-bottom: 1px solid var(--line)
+}
+
+.tbl td {
+    padding: .55rem .5rem;
+    border-bottom: 1px solid var(--line)
+}
+
+@media print {
+    .stat {
+        break-inside: avoid;
+        box-shadow: none
+    }
+}
+
+/* ---- target, trend ---- */
+.targetbar { height: 14px; background: var(--bg); border-radius: 99px; overflow: hidden; margin: .6rem 0; }
+.targetbar i { display: block; height: 100%; border-radius: 99px; background: var(--grad); animation: grow .9s var(--ease); }
+.late { color: var(--crimson); font-weight: 600; }
+.trend td, .trend th { text-align: center; }
+.trend td:first-child, .trend th:first-child { text-align: left; }
+.tbar { display: inline-flex; align-items: flex-end; width: 14px; height: 34px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.tbar i { display: block; width: 100%; background: var(--orange); }
+.trend small { display: block; color: var(--muted); font-size: .7rem; }

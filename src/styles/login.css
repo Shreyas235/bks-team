@@ -1,0 +1,163 @@
+.pw {
+    position: relative;
+    display: block
+}
+
+.pw input {
+    padding-right: 4.5rem
+}
+
+.eye {
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    color: var(--crimson);
+    font: inherit;
+    font-size: .85rem;
+    cursor: pointer
+}
+
+.login {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--deep), var(--crimson), #c2441f, var(--crimson), var(--deep));
+    background-size: 300% 300%;
+    animation: loginflow 16s ease-in-out infinite;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden
+}
+
+/* floating glow orbs behind the card */
+.login-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none
+}
+
+.login-bg i {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .35), rgba(224, 105, 58, .25) 55%, transparent 70%);
+    filter: blur(2px);
+    animation: loginfloat 14s ease-in-out infinite
+}
+
+.login-bg i:nth-child(1) { width: 320px; height: 320px; left: -80px; top: -60px }
+.login-bg i:nth-child(2) { width: 220px; height: 220px; right: 8%; top: 12%; animation-duration: 11s; animation-delay: -3s }
+.login-bg i:nth-child(3) { width: 420px; height: 420px; right: -120px; bottom: -140px; animation-duration: 18s; animation-delay: -6s }
+.login-bg i:nth-child(4) { width: 140px; height: 140px; left: 12%; bottom: 14%; animation-duration: 9s; animation-delay: -2s }
+.login-bg i:nth-child(5) { width: 90px; height: 90px; left: 46%; top: 8%; animation-duration: 12s; animation-delay: -5s; opacity: .7 }
+.login-bg i:nth-child(6) { width: 70px; height: 70px; right: 30%; bottom: 10%; animation-duration: 10s; animation-delay: -7s; opacity: .7 }
+
+.login-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 380px;
+    display: grid;
+    gap: .4rem;
+    border-top: 4px solid var(--orange);
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .55);
+    animation: logincard .7s var(--ease) both
+}
+
+/* children glide in one after another */
+.login-card>* {
+    animation: loginrise .55s var(--ease) both
+}
+
+.login-card>*:nth-child(1) { animation-delay: .15s }
+.login-card>*:nth-child(2) { animation-delay: .22s }
+.login-card>*:nth-child(3) { animation-delay: .29s }
+.login-card>*:nth-child(4) { animation-delay: .36s }
+.login-card>*:nth-child(5) { animation-delay: .43s }
+.login-card>*:nth-child(6) { animation-delay: .5s }
+.login-card>*:nth-child(7) { animation-delay: .57s }
+.login-card>*:nth-child(8) { animation-delay: .64s }
+
+.login-card .btn {
+    position: relative;
+    overflow: hidden
+}
+
+/* shine sweeping across the sign-in button */
+.login-card .btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .45), transparent);
+    transform: skewX(-20deg);
+    animation: loginshine 3.6s ease-in-out 1.2s infinite
+}
+
+.login-card input:focus {
+    box-shadow: 0 0 0 3px rgba(224, 105, 58, .25);
+    transition: box-shadow .2s
+}
+
+.login-card h1 {
+    color: var(--crimson)
+}
+
+.login-card .muted {
+    margin-bottom: 1rem
+}
+
+.loginlogo {
+    width: 96px;
+    justify-self: center;
+    margin-bottom: .4rem;
+    animation: loginrise .55s var(--ease) .15s both, logobob 4s ease-in-out .8s infinite
+}
+
+.login-card h1,
+.login-card>.muted {
+    text-align: center
+}
+
+.login-card label::after {
+    content: none !important
+}
+
+
+@keyframes loginflow {
+    0%, 100% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+}
+
+@keyframes loginfloat {
+    0%, 100% { transform: translate(0, 0) scale(1) }
+    33% { transform: translate(40px, -50px) scale(1.08) }
+    66% { transform: translate(-30px, 30px) scale(.95) }
+}
+
+@keyframes logincard {
+    from { opacity: 0; transform: translateY(40px) scale(.94) }
+    to { opacity: 1; transform: none }
+}
+
+@keyframes loginrise {
+    from { opacity: 0; transform: translateY(14px) }
+    to { opacity: 1; transform: none }
+}
+
+@keyframes logobob {
+    0%, 100% { transform: translateY(0) }
+    50% { transform: translateY(-6px) }
+}
+
+@keyframes loginshine {
+    0%, 55% { left: -60% }
+    100% { left: 130% }
+}
